@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+// import DrawerNavigator from './DrawerNavigator';
+import { useContext, useEffect, useState } from 'react';
+import { UserProvider } from './Contexts/UserContext';
+import NavigationManager from './Navigation/NavigationManager';
 
 export default function App() {
+
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   // Simulate loading process
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 5000); // Adjust the time duration as needed
+  // }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <UserProvider>
+      <NavigationContainer>
+        <NavigationManager />
+      </NavigationContainer>
+    </UserProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
