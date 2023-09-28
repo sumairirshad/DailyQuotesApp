@@ -9,8 +9,8 @@ const LoginScreen = () => {
 
     const navigation = useNavigation();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('shaheryarkhan724@gmail.com');
+    const [password, setPassword] = useState('Password');
     const [isPressed, setIsPressed] = useState(false);
     const [hidePass, setHidePass] = useState(true);
 
