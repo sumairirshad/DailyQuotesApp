@@ -1,15 +1,13 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Searchbar } from 'react-native-paper';
 import CategoriesContainer from '../Components/CategoriesContainer';
+import AppHeader from '../Components/AppHeader';
 
 const CategoriesScreen = () => {
 
-  const [searchQuery, setSearchQuery] = React.useState('');
-
-  const onChangeSearch = query => setSearchQuery(query);
-
-  const categoryArray = [
+  const [searchQuery, setSearchQuery] = useState('');
+  const [tempCategoryArray, setTempCategoryArray] = useState([
     { name: 'Alone', color: 'red' },
     { name: 'Angry', color: 'green' },
     { name: 'Anniversary', color: 'pink' },
@@ -22,11 +20,19 @@ const CategoriesScreen = () => {
     { name: 'Bike', color: 'pink' },
     { name: 'Attitude', color: 'blue' },
     { name: 'Awesome', color: 'grey' },
-  ]
+  ]);
 
-  const renderCategories = ({ item }) => {
+  const onChangeSearch = query => {
+    setSearchQuery(query);
+  }
+
+  const filteredData = tempCategoryArray?.filter((category) =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderCategories = ({ item }, length) => {
     return (
-      <View style={{width: 165, paddingHorizontal: 5}} >
+      <View style={{ width: (length === 1 ? '100%' : '50%'), paddingHorizontal: 5 }} >
         <CategoriesContainer categoryText={item.name} color={item.color} />
       </View>
     )
@@ -34,7 +40,7 @@ const CategoriesScreen = () => {
 
   return (
     <View style={styles.container} >
-
+      <AppHeader />
       <View style={styles.searchBarContainer}>
         <Searchbar
           style={styles.searchBar}
@@ -47,10 +53,10 @@ const CategoriesScreen = () => {
         />
       </View>
 
-    <View style={{marginTop: 20, flex: 1}}>
-
-      <FlatList showsVerticalScrollIndicator={false} data={categoryArray} numColumns={2} contentContainerStyle={{alignSelf: 'center'}} style={styles.listContainer} renderItem={renderCategories} />
-    </View>
+      <View style={{ marginTop: 20, flex: 1 }}>
+        {filteredData.length > 0 ? (<FlatList showsVerticalScrollIndicator={false} data={filteredData} numColumns={2} contentContainerStyle={{ alignSelf: 'center' }} style={styles.listContainer} renderItem={(item) => renderCategories(item, filteredData.length)} />) :
+          (<Text>No Category to show</Text>)}
+      </View>
 
     </View>
   )
@@ -72,6 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   listContainer: {
-    
+
   },
 })

@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import ViewShot from 'react-native-view-shot';
@@ -9,8 +9,15 @@ import { shareAsync } from 'expo-sharing';
 const QuoteContainer = ({ title, quote, style }) => {
 
     const [isLiked, setIsLiked] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
     const captureRef = useRef();
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsCopied(false);
+        }, 3000);
+    }, [isCopied])
 
     const handleDownload = async () => {
         const uri = await captureRef.current.capture();
@@ -18,6 +25,7 @@ const QuoteContainer = ({ title, quote, style }) => {
     };
 
     const copyToClipboard = async () => {
+        setIsCopied(true);
         await Clipboard.setStringAsync(quote);
     };
 
@@ -48,7 +56,7 @@ const QuoteContainer = ({ title, quote, style }) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={copyToClipboard} activeOpacity={0.6} style={styles.buttonContainer}>
                         <MaterialIcons name="content-copy" size={24} color="#333333" />
-                        <Text style={styles.buttonText}>Copy</Text>
+                        <Text style={styles.buttonText}>{isCopied ? "Copied" : "Copy"}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleShare} activeOpacity={0.6} style={styles.buttonContainer}>
                         <Ionicons name="share-social" size={24} color="#333333" />

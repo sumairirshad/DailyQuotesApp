@@ -71,7 +71,7 @@ const DrawerComponent = (props) => {
                 </View>
               )}
               onPress={() => {
-
+                navigation.navigate('Quote of the Day')
               }}
 
             />
