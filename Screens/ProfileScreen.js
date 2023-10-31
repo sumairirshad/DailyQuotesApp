@@ -4,6 +4,8 @@ import { Avatar, TextInput } from 'react-native-paper';
 import { auth } from '../Firebase';
 import AppHeader from '../Components/AppHeader';
 import { UserContext } from '../Contexts/UserContext';
+import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
 
@@ -12,6 +14,9 @@ const ProfileScreen = () => {
     const [email, setEmail] = useState(user.email);
     const [name, setName] = useState(user.displayName);
     const [isPressed, setIsPressed] = useState(false);
+    const [isSignedIn, setIsSignedIn] = useState(true);
+
+    const navigation = useNavigation();
 
     const onSubmit = async () => {
         if (name !== user.displayName) {
@@ -27,6 +32,17 @@ const ProfileScreen = () => {
         }
     }
 
+    useEffect(() => {
+        if (user) {
+            setIsSignedIn(true);
+            setName(user.displayName);
+            setEmail(user.email);
+        }
+        else {
+            navigation.navigate('Home');
+            setIsSignedIn(false)
+        }
+    }, [user])
 
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -40,32 +56,42 @@ const ProfileScreen = () => {
                         <Text style={styles.title} >{user.displayName ? user.displayName : 'Anonymous User'}</Text>
                     </View>
 
-                    <TextInput
-                        placeholder={"Display Name"}
-                        value={name}
-                        style={styles.textInput}
-                        label={"Display Name"}
-                        cursorColor='#0d0d0d'
-                        underlineColor='transparent'
-                        activeUnderlineColor='#0d0d0d'
-                        onChangeText={e => setName(e)}
-                    />
-                    <TextInput
-                        placeholder={"Email Address"}
-                        value={email}
-                        style={styles.textInput}
-                        label={"Email Address"}
-                        cursorColor='#0d0d0d'
-                        underlineColor='transparent'
-                        activeUnderlineColor='#0d0d0d'
-                        editable={false}
-                    />
+                    <View style={styles.inputFieldContainer}>
+
+                        <TextInput
+                            placeholder={"Display Name"}
+                            left={
+                                <TextInput.Icon icon={'account'} />
+                            }
+                            value={isSignedIn ? name : 'Anonymous User'}
+                            editable={isSignedIn}
+                            style={styles.textInput}
+                            label={"Display Name"}
+                            cursorColor='#0d0d0d'
+                            activeUnderlineColor='#0d0d0d'
+                            onChangeText={e => setName(e)}
+                        />
+                        <TextInput
+                            placeholder={"Email Address"}
+                            left={
+                                <TextInput.Icon icon={'email'} />
+                            }
+                            value={isSignedIn ? email : 'NULL'}
+                            style={styles.textInput}
+                            label={"Email Address"}
+                            cursorColor='#0d0d0d'
+                            activeUnderlineColor='#0d0d0d'
+                            editable={false}
+                        />
+
+                    </View>
+
 
                 </View>
 
                 <View style={styles.buttonContainer}>
 
-                    <TouchableOpacity style={styles.button} disabled={isPressed} onPress={() => onSubmit()}>
+                    <TouchableOpacity style={styles.button} disabled={isPressed || !isSignedIn} onPress={() => onSubmit()}>
                         <Text style={[styles.buttonText,]}>SUBMIT</Text>
                         {isPressed && (
                             <ActivityIndicator style={{ marginLeft: 10 }} color={'white'} />
@@ -92,37 +118,43 @@ const styles = StyleSheet.create({
     },
 
     container: {
-        paddingHorizontal: 30,
-        alignItems: 'center',
+        paddingHorizontal: 10,
+        // alignItems: 'center',
         // justifyContent: 'space-between',
     },
     titleContainer: {
-        marginTop: 40,
-        marginBottom: 40,
+        // marginTop: 40,
+        paddingBottom: 40,
+        width: '100%',
+        height: '55%',
+        borderRadius: 10,
+        backgroundColor: '#0d0d0d',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 22,
         // fontFamily: 'Colab-Medium',
         // fontWeight: '700',
-        color: '#0d0d0d',
+        color: '#fff',
+    },
+    inputFieldContainer: {
+        paddingTop: 10,
     },
     textInput: {
-        borderBottomColor: 'transparent',
+        // borderBottomColor: 'transparent',
         height: 60,
-        width: '100%',
+        // width: '100%',
         backgroundColor: '#fff',
-        borderRadius: 7,
-        paddingHorizontal: 15,
+        // borderRadius: 7,
+        // paddingHorizontal: 15,
         margin: 10,
-        borderColor: '#0d0d0d',
-        borderWidth: 1,
+        // borderColor: '#0d0d0d',
+        // borderWidth: 1,
     },
     middleContainer: {
-        height: "60%",
-        width: "100%",
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         // borderWidth: 1,
     },
     buttonContainer: {

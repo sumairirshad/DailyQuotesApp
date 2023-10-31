@@ -24,16 +24,16 @@ const NavigationManager = () => {
         )
     }
 
-    if (user === false) {
-        return (
-            <AuthNavigator />
-        )
-    }
-    else {
+    // if (user === false) {
+    //     return (
+    //         <AuthNavigator />
+    //     )
+    // }
+    // else {
         return (
             <RootNavigator />
         )
-    }
+    // }
 }
 
 export default NavigationManager

@@ -1,26 +1,34 @@
-// import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-// import DrawerNavigator from './DrawerNavigator';
-import { useContext, useEffect, useState } from 'react';
 import { UserProvider } from './Contexts/UserContext';
 import NavigationManager from './Navigation/NavigationManager';
+import { Provider } from 'react-redux';
+import 'expo-dev-client'
+import store from './Stores/store';
+import {
+  MD3LightTheme as DefaultTheme,
+  PaperProvider,
+} from 'react-native-paper';
 
 export default function App() {
 
-  // const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   // Simulate loading process
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 5000); // Adjust the time duration as needed
-  // }, []);
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'tomato',
+      secondary: 'yellow',
+    },
+  };
 
   return (
-    <UserProvider>
-      <NavigationContainer>
-        <NavigationManager />
-      </NavigationContainer>
-    </UserProvider>
+    <Provider store={store}>
+      <UserProvider>
+        <PaperProvider theme={theme} >
+          <NavigationContainer>
+            <NavigationManager />
+          </NavigationContainer>
+        </PaperProvider>
+      </UserProvider>
+    </Provider >
   );
 }
