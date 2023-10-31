@@ -15,33 +15,33 @@ const SignupScreen = () => {
     const [hidePass, setHidePass] = useState(true);
     const [hidePassConfirm, setHidePassConfirm] = useState(true);
 
-    const handleSignup = () => {
-
-        const isValidEmail = () =>
+    const isValidEmail = () =>
         /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
-        const isValid = () => {
-            if (confirmPass, email, password){
-                if (!isValidEmail()) {
-                    alert('Please enter a valid email address');
-                    return false;
-                }
-                else if (password !== confirmPass){
-                    alert('Password and Confirm Password does not match');
-                    return false
-                }
-                return true;
-            }
-            else {
-                alert("All fields are required!");
+    const isValid = () => {
+        if (confirmPass, email, password) {
+            if (!isValidEmail()) {
+                alert('Please enter a valid email address');
                 return false;
             }
+            else if (password !== confirmPass) {
+                alert('Password and Confirm Password does not match');
+                return false
+            }
+            return true;
         }
+        else {
+            alert("All fields are required!");
+            return false;
+        }
+    }
+    const handleSignup = () => {
 
         if (isValid()) {
             setIsPressed(true);
             auth.createUserWithEmailAndPassword(email, password).then(userCredentials => {
                 const user = userCredentials.user;
+                setIsPressed(false);
                 // const userData = {
                 //     name: name,
                 //     email: email,
@@ -139,7 +139,7 @@ const SignupScreen = () => {
 
             <View style={styles.loginContainer}>
                 <Text style={styles.text}>Already have an account?</Text>
-                <TouchableOpacity onPress={() => navigation.replace("Login")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                     <Text style={styles.loginText}>Login</Text>
                 </TouchableOpacity>
             </View>

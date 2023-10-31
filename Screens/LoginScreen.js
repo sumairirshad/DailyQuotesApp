@@ -9,8 +9,8 @@ const LoginScreen = () => {
 
     const navigation = useNavigation();
 
-    const [email, setEmail] = useState('shaheryarkhan724@gmail.com');
-    const [password, setPassword] = useState('Password');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isPressed, setIsPressed] = useState(false);
     const [hidePass, setHidePass] = useState(true);
 
@@ -19,6 +19,8 @@ const LoginScreen = () => {
             setIsPressed(true);
             auth.signInWithEmailAndPassword(email, password).then(userCredentials => {
                 const user = userCredentials.user;
+                setIsPressed(false);
+                navigation.goBack();
             })
                 .catch(e => { setIsPressed(false), alert(e.message) });
         }
@@ -33,7 +35,6 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-
 
             <Text style={styles.logoText} >Daily Quotes</Text>
 
@@ -80,7 +81,7 @@ const LoginScreen = () => {
                 <HelperText type='error' visible={hasErrors()}>Password must be of atleast 8 characters!</HelperText>
             </View>
 
-            <TouchableOpacity style={styles.forget} onPress={() => { navigation.replace('Forgot Password') }} >
+            <TouchableOpacity style={styles.forget} onPress={() => { navigation.navigate('Forgot Password') }} >
                 <Text style={styles.forgetText}>Forgot your password?</Text>
             </TouchableOpacity>
 

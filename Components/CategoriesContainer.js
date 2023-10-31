@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 
-const CategoriesContainer = ({categoryText, color}) => {
+const CategoriesContainer = ({ categoryText, color, id }) => {
+
+    const navigation = useNavigation();
 
     return (
-        <TouchableOpacity activeOpacity={0.8} style={styles.container} >
-            <View style={[styles.categoryContainer, {backgroundColor: color}]}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('CategoryView', { header: categoryText, categoryId: id })} style={styles.container} >
+            <View style={[styles.categoryContainer, { backgroundColor: color }]}>
                 <Text style={styles.categoryText}>{categoryText}</Text>
             </View>
         </TouchableOpacity>
@@ -21,7 +24,9 @@ const styles = StyleSheet.create({
     categoryContainer: {
         marginVertical: 5,
         height: 100,
-        // width: '90%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
         padding: 10,
         borderRadius: 5,
     },

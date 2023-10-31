@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { Ionicons, FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { DrawerActions, useNavigation, useRoute } from '@react-navigation/native';
 import { auth } from '../Firebase';
 import { Divider } from 'react-native-paper';
+import { UserContext } from '../Contexts/UserContext';
 
 
 const DrawerComponent = (props) => {
 
   const navigation = useNavigation()
+
+  const { user } = useContext(UserContext)
+
+  const handleAuth = async () => {
+    if (user) {
+      navigation.dispatch(DrawerActions.closeDrawer());
+      await auth.signOut();
+    }
+    else {
+      navigation.navigate("Login");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -34,7 +47,7 @@ const DrawerComponent = (props) => {
 
             />
             <Divider style={{ marginTop: 10, marginBottom: 5, marginLeft: 60, maxWidth: 150 }} />
-            <DrawerItem
+            {user && <DrawerItem
               label="Profile"
               labelStyle={styles.drawerItem}
               icon={() => (
@@ -46,8 +59,8 @@ const DrawerComponent = (props) => {
                 navigation.navigate('Profile')
               }}
 
-            />
-            <Divider style={{ marginTop: 10, marginBottom: 5, marginLeft: 60, maxWidth: 150 }} />
+            />}
+            {user && <Divider style={{ marginTop: 10, marginBottom: 5, marginLeft: 60, maxWidth: 150 }} />}
             <DrawerItem
               label="Categories"
               labelStyle={styles.drawerItem}
@@ -63,6 +76,20 @@ const DrawerComponent = (props) => {
             />
             <Divider style={{ marginTop: 10, marginBottom: 5, marginLeft: 60, maxWidth: 150 }} />
             <DrawerItem
+              label="Liked Quotes"
+              labelStyle={styles.drawerItem}
+              icon={() => (
+                <View style={styles.iconContainer}>
+                  <AntDesign name="like1" size={26} color="#FAFAFA" />
+                </View>
+              )}
+              onPress={() => {
+                navigation.navigate('Liked Quotes')
+              }}
+
+            />
+            <Divider style={{ marginTop: 10, marginBottom: 5, marginLeft: 60, maxWidth: 150 }} />
+            <DrawerItem
               label="Quote of the Day"
               labelStyle={styles.drawerItem}
               icon={() => (
@@ -71,7 +98,7 @@ const DrawerComponent = (props) => {
                 </View>
               )}
               onPress={() => {
-
+                navigation.navigate('Quote of the Day')
               }}
 
             />
@@ -97,12 +124,12 @@ const DrawerComponent = (props) => {
               labelStyle={styles.drawerItem}
               icon={() => (
                 <View style={styles.signOutContainer}>
-                  <Text style={styles.drawerItem}>Sign-out</Text>
+                  <Text style={styles.drawerItem}>{user ? "Sign-out" : "Sign-in"}</Text>
                   <AntDesign style={{ paddingLeft: 10 }} name="arrowright" size={26} color="#fafafa" />
                 </View>
               )}
               onPress={async () => {
-                await auth.signOut();
+                handleAuth()
               }}
             />
           </View>
@@ -136,7 +163,7 @@ const styles = StyleSheet.create({
   midPart: {
   },
   botPart: {
-    height: '40%',
+    height: '35%',
     justifyContent: 'flex-end',
 
   },
